@@ -38,10 +38,16 @@ function App() {
         const fetchArt = async () => {
             try {
                 const REDDIT_URL = 'https://www.reddit.com/user/zuccenoo/submitted.json?limit=10'
-                const url = `https://corsproxy.io/?${encodeURIComponent(REDDIT_URL)}`
+                const url = `https://api.allorigins.win/get?url=${encodeURIComponent(REDDIT_URL)}`
 
                 const res = await fetch(url)
-                const data = await res.json()
+                const json = await res.json()
+                const data = JSON.parse(json.contents) // allorigins wraps response in .contents
+
+                if (!data?.data?.children) {
+                    console.error('Unexpected Reddit response:', data)
+                    return
+                }
 
                 const posts = data.data.children
                     .filter(post =>
@@ -53,7 +59,7 @@ function App() {
                         if (post.data.is_gallery && post.data.media_metadata) {
                             const firstKey = Object.keys(post.data.media_metadata)[0]
                             const meta = post.data.media_metadata[firstKey]
-                            // decode HTML entities in URL
+                            // decode HTML entities in URL, grab largest preview
                             const url = meta.p?.[meta.p.length - 1]?.u?.replace(/&amp;/g, '&')
                             return {
                                 title: post.data.title,
