@@ -3,7 +3,7 @@ import Particles from "../components/Particles";
 import Model3D from "../components/Model3D";
 import InteractiveParticles from "../components/InteractiveParticles";
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Shadcn UI imports
 import { Button } from '@/components/ui/button'
@@ -18,6 +18,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Menu, } from 'lucide-react'
 
+
 function App() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -25,8 +26,59 @@ function App() {
         'Home': '#home',
         'About': '#about',
         'Projects': '#projects',
-        'Art': '#art'
+        'Art': '#art',
+        'Contact': '#contact'
     };
+
+    // reddit api to fetch art posts
+    const [artworks, setArtworks] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchArt = async () => {
+            try {
+                const res = await fetch('https://www.reddit.com/user/zuccenoo/submitted.json?limit=10')
+                const data = await res.json()
+
+                const posts = data.data.children
+                    .filter(post => 
+                        post.data.is_gallery || 
+                        post.data.post_hint === 'image'
+                    )
+                    .map(post => {
+                        // gallery posts — grab first image from media_metadata
+                        if (post.data.is_gallery && post.data.media_metadata) {
+                            const firstKey = Object.keys(post.data.media_metadata)[0]
+                            const meta = post.data.media_metadata[firstKey]
+                            // decode HTML entities in URL
+                            const url = meta.p?.[meta.p.length - 1]?.u?.replace(/&amp;/g, '&')
+                            return {
+                                title: post.data.title,
+                                img: url,
+                                subreddit: post.data.subreddit,
+                                url: `https://reddit.com${post.data.permalink}`,
+                            }
+                        }
+                        // single image posts
+                        return {
+                            title: post.data.title,
+                            img: post.data.url,
+                            subreddit: post.data.subreddit,
+                            url: `https://reddit.com${post.data.permalink}`,
+                        }
+                    })
+                    .filter(p => p.img) // drop any without images
+
+                setArtworks(posts)
+            } catch (err) {
+                console.error('Reddit fetch failed:', err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchArt()
+    }, [])
 
     return (
         <div className="min-h-screen flex flex-col text-slate-200 relative" style={{ scrollBehavior: 'smooth' }}>
@@ -77,12 +129,13 @@ function App() {
 
                         <Separator orientation="vertical" className=" bg-[#44445a] mx-2" />
 
-                        <Button
-                            variant="outline"
-                            className="border-green-700/50 text-green-500 hover:bg-green-700/10 hover:text-green-400 bg-transparent"
-                        >
-                            Playground
-                        </Button>
+                        <a href="#contact">
+                            <Button
+                                className="bg-green-700 text-slate-300 hover:bg-green-700/10 hover:text-green-400"
+                            >
+                                Contact
+                            </Button>
+                        </a>
                     </div>
 
                     {/* MOBILE */}
@@ -91,32 +144,49 @@ function App() {
                             <SheetTrigger className="text-slate-400 hover:text-green-500 p-2 rounded-md hover:bg-green-700/10 transition-colors">
                                 <Menu className="w-5 h-5" />
                             </SheetTrigger>
-                            <SheetContent side="right" className="bg-[#2d2d3a] border-l border-[#44445a] w-60">
-                                <SheetTitle className="text-green-500 font-bold text-lg">MERN</SheetTitle>
-                                <Separator className="bg-[#44445a] my-4" />
-                                <div className="flex flex-col gap-1">
+                            <SheetContent side="right" className="bg-[#2d2d3a]/95 backdrop-blur-md border-l border-white/5 w-64 p-0">
+
+                                {/* DRAWER HEADER */}
+                                <div className="px-6 py-5 border-b border-white/5 flex items-center gap-3">
+                                    <img src="../logo.png" alt="logo" className="w-7 h-7" />
+                                    <SheetTitle className="text-sm font-semibold tracking-widest text-slate-200 uppercase">
+                                        Sam<span className="text-green-500">.</span>
+                                    </SheetTitle>
+                                </div>
+
+                                {/* DRAWER LINKS */}
+                                <div className="px-3 py-4 flex flex-col gap-1">
                                     {['Home', 'About', 'Projects', 'Art'].map((item) => (
                                         <a
                                             key={item}
                                             href={sectionMap[item]}
                                             onClick={() => setMobileMenuOpen(false)}
+                                            className="flex items-center px-3 py-2.5 rounded-md text-xs text-slate-400 hover:text-green-400 hover:bg-white/5 transition-all duration-200 tracking-widest uppercase font-medium"
                                         >
-                                            <Button
-                                                variant="ghost"
-                                                className="justify-start text-slate-300 hover:text-green-500 hover:bg-green-700/10 w-full"
-                                            >
-                                                {item}
-                                            </Button>
+                                            {item}
                                         </a>
                                     ))}
-                                    <Separator className="bg-[#44445a] my-4" />
-                                    <Button
-                                        variant="outline"
-                                        className="border-green-700/50 text-green-500 hover:bg-green-700/10 hover:text-green-400 bg-transparent"
+
+                                    <Separator className="bg-white/5 my-3" />
+
+                                    <a
+                                        href="#contact"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="w-full"
                                     >
-                                        Playground
-                                    </Button>
+                                        <Button
+                                            className="w-full bg-green-700 text-slate-200 hover:bg-green-600 text-xs tracking-widest uppercase font-medium"
+                                        >
+                                            Contact
+                                        </Button>
+                                    </a>
                                 </div>
+
+                                {/* DRAWER FOOTER */}
+                                <div className="absolute bottom-0 left-0 right-0 px-6 py-4 border-t border-white/5">
+                                    <p className="text-xs text-slate-600 tracking-wider">© 2025 Samuel Salvadora</p>
+                                </div>
+
                             </SheetContent>
                         </Sheet>
                     </div>
@@ -255,9 +325,9 @@ function App() {
                                         <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
                                             GitHub ↗
                                         </Button>
-                                        <Button 
-                                            href="http://casadaisy.online/" 
-                                            size="sm" variant="outline" 
+                                        <Button
+                                            href="http://casadaisy.online/"
+                                            size="sm" variant="outline"
                                             className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs"
                                         >
                                             Live ↗
@@ -483,55 +553,81 @@ function App() {
                                 Digital Art &<br />Illustrations
                             </h2>
                             <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
-                                Freelance digital art for personal and commercial projects —
+                                I also do freelance digital art mainly for personal projects, including
                                 character design, concept art, and illustrations.
                             </p>
                         </div>
 
-                        {/* FEATURED PIECE — full width */}
-                        <motion.div
-                            className="relative group overflow-hidden rounded-xl bg-[#1a2420] border border-white/5 w-full h-64 md:h-80 mb-4"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0 }}
-                            viewport={{ once: true }}
-                        >
-                            <div className="w-full h-full bg-gradient-to-br from-green-900/30 to-slate-900/60 flex items-end p-6">
-                                <div>
-                                    <span className="text-xs text-green-400 tracking-widest uppercase">Featured</span>
-                                    <p className="text-slate-100 font-semibold text-xl mt-1">Untitled No. 1</p>
-                                    <p className="text-slate-500 text-xs">Digital Illustration · 2025</p>
-                                </div>
+                        {loading ? (
+                            // LOADING STATE
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-12">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={`rounded-xl bg-[#1a2420] border border-white/5 animate-pulse ${i === 0 ? 'col-span-2 md:col-span-4 h-64 md:h-80' : 'aspect-square'}`}
+                                    />
+                                ))}
                             </div>
-                            <div className="absolute inset-0 bg-green-500/0 group-hover:bg-green-500/5 transition-all duration-300" />
-                        </motion.div>
-
-                        {/* SMALLER PIECES — 4 in a row */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-12">
-                            {[
-                                { title: 'Character Study', year: '2025', type: 'Character Design' },
-                                { title: 'Concept Art', year: '2024', type: 'Environment' },
-                                { title: 'Commission', year: '2025', type: 'Portrait' },
-                                { title: 'Personal Work', year: '2024', type: 'Abstract' },
-                            ].map((piece, i) => (
-                                <motion.div
-                                    key={piece.title}
-                                    className="relative group overflow-hidden rounded-xl bg-[#1a2420] border border-white/5 aspect-square"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.1 * (i + 1) }}
-                                    viewport={{ once: true }}
-                                >
-                                    <div className="w-full h-full bg-gradient-to-br from-slate-800/40 to-green-900/20 flex items-end p-3 md:p-4">
-                                        <div>
-                                            <p className="text-slate-200 font-medium text-sm">{piece.title}</p>
-                                            <p className="text-slate-500 text-xs">{piece.type} · {piece.year}</p>
+                        ) : (
+                            <>
+                                {/* FEATURED — first post, full width */}
+                                {artworks[0] && (
+                                    <motion.a
+                                        href={artworks[0].url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="relative group overflow-hidden rounded-xl bg-[#1a2420] border border-white/5 w-full h-64 md:h-80 mb-4 block"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        viewport={{ once: true }}
+                                    >
+                                        <img
+                                            src={artworks[0].img}
+                                            alt={artworks[0].title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-6">
+                                            <div>
+                                                <span className="text-xs text-green-400 tracking-widest uppercase">Featured</span>
+                                                <p className="text-slate-100 font-semibold text-xl mt-1 line-clamp-1">{artworks[0].title}</p>
+                                                <p className="text-slate-500 text-xs">r/{artworks[0].subreddit}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="absolute inset-0 bg-green-500/0 group-hover:bg-green-500/5 transition-all duration-300" />
-                                </motion.div>
-                            ))}
-                        </div>
+                                        <div className="absolute inset-0 bg-green-500/0 group-hover:bg-green-500/5 transition-all duration-300" />
+                                    </motion.a>
+                                )}
+
+                                {/* SMALLER PIECES — remaining posts */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-12">
+                                    {artworks.slice(1, 5).map((piece, i) => (
+                                        <motion.a
+                                            key={piece.url}
+                                            href={piece.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="relative group overflow-hidden rounded-xl bg-[#1a2420] border border-white/5 aspect-square block"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.5, delay: 0.1 * (i + 1) }}
+                                            viewport={{ once: true }}
+                                        >
+                                            <img
+                                                src={piece.img}
+                                                alt={piece.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-3">
+                                                <div>
+                                                    <p className="text-slate-200 font-medium text-sm line-clamp-2">{piece.title}</p>
+                                                    <p className="text-slate-500 text-xs">r/{piece.subreddit}</p>
+                                                </div>
+                                            </div>
+                                        </motion.a>
+                                    ))}
+                                </div>
+                            </>
+                        )}
 
                         {/* FOOTER ROW */}
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -540,7 +636,15 @@ function App() {
                             </p>
                             <div className="flex gap-3">
                                 <Button
+                                    variant="outline"
+                                    className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-sm"
+                                    onClick={() => window.open('https://www.reddit.com/user/zuccenoo', '_blank')}
+                                >
+                                    View on Reddit ↗
+                                </Button>
+                                <Button
                                     className="bg-green-600 hover:bg-green-500 text-slate-950 text-sm font-semibold"
+                                    onClick={() => window.open('https://vgen.co/zuccenoo', '_blank')}
                                 >
                                     Visit my VGen ↗
                                 </Button>
@@ -570,7 +674,7 @@ function App() {
                                 Drop a Thought
                             </h2>
                             <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
-                                Say hi, leave feedback, or just write whatever. No rules.
+                                Leave a message typa section, note that these are sample thoughts and profanity may or may not be involved
                             </p>
                         </div>
 
@@ -630,7 +734,7 @@ function App() {
                                 placeholder="Write something..."
                                 disabled
                             />
-                            
+
                             <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/5">
                                 <span className="text-slate-600 text-xs">doesnt work yet sonion</span>
                                 <Button
@@ -643,42 +747,49 @@ function App() {
                         </div>
                     </div>
                 </motion.section>
-
-                {/* EXAMPLE SECTION - EVANGELION TITLE CARD*/}
-                <section className="py-20 px-6 overflow-hidden">
-                    <div className="max-w-6xl mx-auto">
-
-                    </div>
-                </section>
-
             </main>
 
             {/* FOOTER */}
-            <footer className="bg-[#2d2d3a] border-t border-white/5 relative z-10">
-
+            <footer id="contact" className="bg-[#2d2d3a] border-t border-white/5 relative z-10">
                 <div className="max-w-6xl mx-auto px-6 py-12">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
 
-                        {/* BRAND */}
                         <div className="col-span-1">
-                            <div className="flex items-center gap-2.5 mb-4">
-                                <img src="/logo.png" alt="logo" className="w-7 h-7" />
-                                <span className="text-sm font-semibold tracking-widest text-slate-200 uppercase">
-                                    Sam Salvadora Portfolio
+                            <h2
+                                className="font-black text-slate-100 leading-none tracking-tight mb-3"
+                                style={{
+                                    fontFamily: 'Times New Roman',
+                                    fontSize: 'clamp(1.2rem, 3vw, 1.8rem)'
+                                }}
+                            >
+                                SAMUEL<br />
+                                SALVADORA<br />
+                                <span style={{ fontSize: 'clamp(1.6rem, 4.5vw, 2.8rem)' }}>
+                                    PORTFOLIO
                                 </span>
-                            </div>
+                            </h2>
+                            <p
+                                className="text-white font-bold mb-3"
+                                style={{
+                                    fontFamily: 'Georgia, serif',
+                                    fontSize: 'clamp(0.7rem, 1.5vw, 0.85rem)'
+                                }}
+                            >
+                                FINALE:<br />
+                                <span className="text-white font-normal">Take care of yourself.</span>
+                            </p>
+
                         </div>
 
-                        {/* NAV */}
                         <div className="col-span-1">
                             <p className="text-xs text-slate-500 tracking-[0.2em] uppercase mb-4">Navigate</p>
                             <div className="flex flex-col gap-2">
                                 {[
-                                    { label: 'Home',     href: '#'          },
-                                    { label: 'About',    href: '#about'     },
-                                    { label: 'Projects', href: '#projects'  },
-                                    { label: 'Art',      href: '#art'       },
-                                    { label: 'Thoughts', href: '#thoughts'  },
+                                    { label: 'Back to Home', href: '#home' },
+                                    { label: 'About', href: '#about' },
+                                    { label: 'Projects', href: '#projects' },
+                                    { label: 'Art', href: '#art' },
+                                    { label: 'Thoughts', href: '#thoughts' },
                                 ].map((link) => (
                                     <a
                                         key={link.label}
@@ -691,26 +802,27 @@ function App() {
                             </div>
                         </div>
 
-                        {/* CONTACT */}
                         <div className="col-span-1">
                             <p className="text-xs text-slate-500 tracking-[0.2em] uppercase mb-4">Contact</p>
                             <div className="flex flex-col gap-2">
-                                <a href="mailto:your@email.com" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
-                                    your@email.com
+                                <a href="mailto:samueljoshuabusiness@gmail.com" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
+                                    samueljoshuabusiness@gmail.com
                                 </a>
-                                <a href="#" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
+                                <a href="https://github.com/zuccenoo" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
                                     GitHub ↗
                                 </a>
-                                <a href="#" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
+                                <a href="https://www.linkedin.com/in/samuel-joshua-salvadora-577b9539a/" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
                                     LinkedIn ↗
                                 </a>
                             </div>
                         </div>
-
                     </div>
-
+                    <div className="border-t border-white/5 pt-6 text-right gap-2">
+                        <p className="text-xs text-slate-400">
+                            {new Date().getFullYear()} Samuel Salvadora. This is a personal website and not a professional portfolio.
+                        </p>
+                    </div>
                 </div>
-
             </footer>
 
         </div>
