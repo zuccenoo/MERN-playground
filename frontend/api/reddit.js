@@ -4,15 +4,17 @@ export default async function handler(req, res) {
             'https://www.reddit.com/user/zuccenoo/submitted.json?limit=10',
             {
                 headers: {
-                    // Reddit requires a user agent or it blocks the request
-                    'User-Agent': 'portfolio-site/1.0'
+                    'User-Agent': 'Mozilla/5.0 (compatible; portfolio-bot/1.0)'
                 }
             }
         )
-        const data = await response.json()
+
+        const text = await response.text()
+        const data = JSON.parse(text)
+
         res.setHeader('Access-Control-Allow-Origin', '*')
         res.status(200).json(data)
     } catch (err) {
-        res.status(500).json({ error: 'Failed to fetch Reddit data' })
+        res.status(500).json({ error: err.message })
     }
 }
