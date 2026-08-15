@@ -37,7 +37,12 @@ function App() {
     useEffect(() => {
         const fetchArt = async () => {
             try {
-                const res = await fetch('https://www.reddit.com/user/zuccenoo/submitted.json?limit=10')
+                const REDDIT_URL = 'https://www.reddit.com/user/zuccenoo/submitted.json?limit=10'
+                const url = import.meta.env.DEV
+                    ? `https://corsproxy.io/?${encodeURIComponent(REDDIT_URL)}`
+                    : REDDIT_URL
+
+                const res = await fetch(url)
                 const data = await res.json()
 
                 const posts = data.data.children
