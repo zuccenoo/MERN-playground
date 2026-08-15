@@ -38,16 +38,14 @@ function App() {
         const fetchArt = async () => {
             try {
                 const REDDIT_URL = 'https://www.reddit.com/user/zuccenoo/submitted.json?limit=10'
-                const url = import.meta.env.DEV
-                    ? `https://corsproxy.io/?${encodeURIComponent(REDDIT_URL)}`
-                    : REDDIT_URL
+                const url = `https://corsproxy.io/?${encodeURIComponent(REDDIT_URL)}`
 
                 const res = await fetch(url)
                 const data = await res.json()
 
                 const posts = data.data.children
-                    .filter(post => 
-                        post.data.is_gallery || 
+                    .filter(post =>
+                        post.data.is_gallery ||
                         post.data.post_hint === 'image'
                     )
                     .map(post => {
