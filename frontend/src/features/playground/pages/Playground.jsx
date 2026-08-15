@@ -42,7 +42,7 @@ function App() {
                     {/* LOGO */}
                     <div className="flex items-center gap-3">
                         <img src="../logo.png" alt="logo" className="w-8 h-8" />
-                        <span className="text-xl font-bold text-green-500">MERN</span>
+                        <span className="text-xl font-bold text-green-500">SAM SALVADORA</span>
                     </div>
 
                     {/* DESKTOP */}
@@ -144,28 +144,52 @@ function App() {
                 {/* ABOUT */}
                 <motion.section
                     id="about"
-                    className="bg-[#4f5f4f] py-20 px-6"
+                    className="relative bg-[#4f5f4f] py-24 px-6 overflow-hidden"
                     initial={{ opacity: 0, x: -100 }}
-                    whileInView={{ opacity: 1, x: 1 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, ease: "easeOut" }}
                     viewport={{ once: false, amount: 0.3 }}
                 >
                     <div className="absolute inset-0 h-full w-full">
                         <Particles />
                     </div>
-                    <div className="max-w-6xl mx-auto">
+
+                    <div className="relative z-10 max-w-6xl mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
+                            {/* TEXT */}
                             <div className="text-left">
-                                <h2 className="text-3xl font-bold mb-6 text-slate-100">
-                                    About This Project
-                                </h2>
-                                <p className="text-slate-200 text-justify text-lg leading-relaxed">
-                                    I borderline vibecoded this website to test out MERN, tailwaind, and other playful components like particles, trasitions and this model of a minecraft tree. Feel free to move this tree around or whatever.
+                                <p className="text-xs text-green-400 tracking-[0.3em] uppercase mb-3 font-medium">
+                                    Who I Am
                                 </p>
+                                <h2 className="text-4xl md:text-5xl font-black text-slate-100 leading-tight mb-6">
+                                    About Me &<br />This Site
+                                </h2>
+
+                                <p className="text-slate-200 text-lg leading-relaxed mb-6">
+                                    I'm an entry-level software developer with a foundation in web development —
+                                    having built projects across the full stack using PHP, Laravel, and the MERN stack
+                                    through academic and internship work.
+                                </p>
+
+                                <p className="text-slate-300 text-base leading-relaxed mb-8">
+                                    While web dev is where I started, I'm actively looking to grow beyond it —
+                                    exploring other areas of software development as I look for opportunities
+                                    to contribute, learn, and build things that matter.
+                                </p>
+
+                                <div className="relative overflow-hidden">
+                                    <p className="text-slate-400 bg-black/10 text-sm leading-relaxed mb-10 border-l-2 border-green-500/40 pl-4">
+                                        This site itself is a playground — built to test out MERN, Tailwind,
+                                        Framer Motion, Three.js, and a canvas particle system. The 3D tree
+                                        on the right? Feel free to drag it around.
+                                    </p>
+                                    <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#4f5f4f] to-transparent pointer-events-none" />
+                                </div>
                             </div>
 
-                            <div className="h-96 z-0 overflow-hidden rounded-lg bg-[#2d2d3a]">
+                            {/* 3D MODEL */}
+                            <div className="h-96 z-0 overflow-hidden rounded-xl bg-[#2d2d3a] border border-white/5">
                                 <Model3D />
                             </div>
 
@@ -173,184 +197,7 @@ function App() {
                     </div>
                 </motion.section>
 
-                {/* REVIEWS / PROJECTS */}
-                <motion.section
-                    className="py-20 px-6"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: false, amount: 0.2 }}
-                >
-                    <div className="max-w-6xl mx-auto">
-                        <h2 className="text-4xl font-bold mb-4 text-slate-100 text-center">
-                            Client Reviews
-                        </h2>
-                        <p className="text-center text-slate-400 mb-12 max-w-2xl mx-auto">
-                            What people are saying about my work
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                            {/* Review Card 1 */}
-                            <motion.div
-                                className="bg-[#2d2d3a] p-6 rounded-xl border border-[#44445a] hover:border-green-700/50 transition-all duration-300"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=samuel1"
-                                        alt="reviewer"
-                                        className="w-12 h-12 rounded-full border border-green-700/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-slate-100 font-semibold">Alex Johnson</h3>
-                                        <div className="flex gap-1 text-yellow-400">
-                                            {'★'.repeat(5)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    "Amazing work! The portfolio is incredibly well-designed with smooth animations and great attention to detail. Highly recommend!"
-                                </p>
-                            </motion.div>
-
-                            {/* Review Card 2 */}
-                            <motion.div
-                                className="bg-[#2d2d3a] p-6 rounded-xl border border-[#44445a] hover:border-green-700/50 transition-all duration-300"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=samuel2"
-                                        alt="reviewer"
-                                        className="w-12 h-12 rounded-full border border-green-700/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-slate-100 font-semibold">Sarah Chen</h3>
-                                        <div className="flex gap-1 text-yellow-400">
-                                            {'★'.repeat(5)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    "Perfect MERN stack implementation. The code is clean, the UI is beautiful, and everything works flawlessly. 10/10!"
-                                </p>
-                            </motion.div>
-
-                            {/* Review Card 3 */}
-                            <motion.div
-                                className="bg-[#2d2d3a] p-6 rounded-xl border border-[#44445a] hover:border-green-700/50 transition-all duration-300"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=samuel3"
-                                        alt="reviewer"
-                                        className="w-12 h-12 rounded-full border border-green-700/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-slate-100 font-semibold">Michael Park</h3>
-                                        <div className="flex gap-1 text-yellow-400">
-                                            {'★'.repeat(4)} <span className="text-slate-500">☆</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    "Fantastic developer! Great communication, timely delivery, and exceptional attention to detail. Would work with again."
-                                </p>
-                            </motion.div>
-
-                            {/* Review Card 4 */}
-                            <motion.div
-                                className="bg-[#2d2d3a] p-6 rounded-xl border border-[#44445a] hover:border-green-700/50 transition-all duration-300"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=samuel4"
-                                        alt="reviewer"
-                                        className="w-12 h-12 rounded-full border border-green-700/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-slate-100 font-semibold">Emma Rodriguez</h3>
-                                        <div className="flex gap-1 text-yellow-400">
-                                            {'★'.repeat(5)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    "The 3D model integration was creative and the whole site feels modern. Best portfolio I've seen in a while!"
-                                </p>
-                            </motion.div>
-
-                            {/* Review Card 5 */}
-                            <motion.div
-                                className="bg-[#2d2d3a] p-6 rounded-xl border border-[#44445a] hover:border-green-700/50 transition-all duration-300"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.4 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=samuel5"
-                                        alt="reviewer"
-                                        className="w-12 h-12 rounded-full border border-green-700/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-slate-100 font-semibold">David Kumar</h3>
-                                        <div className="flex gap-1 text-yellow-400">
-                                            {'★'.repeat(5)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    "Impressive use of Framer Motion and Tailwind CSS. The animations are smooth and the design is cohesive throughout."
-                                </p>
-                            </motion.div>
-
-                            {/* Review Card 6 */}
-                            <motion.div
-                                className="bg-[#2d2d3a] p-6 rounded-xl border border-[#44445a] hover:border-green-700/50 transition-all duration-300"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.5 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <img
-                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=samuel6"
-                                        alt="reviewer"
-                                        className="w-12 h-12 rounded-full border border-green-700/50"
-                                    />
-                                    <div>
-                                        <h3 className="text-slate-100 font-semibold">Lisa Wang</h3>
-                                        <div className="flex gap-1 text-yellow-400">
-                                            {'★'.repeat(1)}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    "Tanginamo."
-                                </p>
-                            </motion.div>
-                        </div>
-                    </div>
-                </motion.section>
-                {/* IMPLEMENT DAISY UI LATER SO THAT YOU COULD FIND A PROPER THEME FOR THESE SHIT */}
-                {/* STATS */}
+                {/* PROJECTS */}
                 <motion.section
                     id="projects"
                     className="py-20 px-6"
@@ -359,144 +206,201 @@ function App() {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: false, amount: 0.2 }}
                 >
-
                     <div className="max-w-6xl mx-auto">
-                        <h2 className="text-4xl font-bold mb-4 text-slate-100 text-center">
-                            BENTO GRID LAYOUT EXAMPLE
-                        </h2>
-                        <p className="text-center text-slate-400 mb-12 max-w-2xl mx-auto">
-                            Do not mind the filler text
-                        </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-max">
+                        {/* HEADER */}
+                        <div className="mb-14 text-left">
+                            <p className="text-xs text-green-500 tracking-[0.3em] uppercase mb-3 font-medium">
+                                Work
+                            </p>
+                            <h2 className="text-4xl md:text-5xl font-black text-slate-100 leading-tight mb-4">
+                                Projects
+                            </h2>
+                            <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
+                                A mix of capstone, internship, and personal work.
+                            </p>
+                        </div>
 
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                            {/* CDMS — featured, large */}
                             <motion.div
-                                className="md:col-span-2 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                className="md:col-span-2 bg-[#1a1a24] border border-white/5 hover:border-green-700/30 rounded-xl p-6 flex flex-col justify-between gap-6 transition-all duration-300"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0 }}
-                                viewport={{ once: true, amount: 0.3 }}
+                                viewport={{ once: true, amount: 0.2 }}
                             >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    BORN TO DIE
-                                </p>
+                                <div>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="text-xs text-green-400 tracking-widest uppercase font-medium">Capstone</span>
+                                        <span className="text-xs text-slate-600">2024</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-100 mb-2">
+                                        CDMS — Hotel & Event Management (Co-developed)
+                                    </h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        A full hotel and event management system built as a capstone project. Handles reservations, event scheduling, guest management, and reporting.
+                                    </p>
+                                </div>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {['HTML', 'CSS', 'JavaScript', 'PHP', 'jQuery', 'Bootstrap'].map((tag) => (
+                                            <span key={tag} className="text-xs px-2 py-1 rounded-md bg-white/5 text-slate-400 border border-white/5">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            GitHub ↗
+                                        </Button>
+                                        <Button 
+                                            href="http://casadaisy.online/" 
+                                            size="sm" variant="outline" 
+                                            className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs"
+                                        >
+                                            Live ↗
+                                        </Button>
+                                    </div>
+                                </div>
                             </motion.div>
 
+                            {/* HR PORTAL */}
                             <motion.div
-                                className="md:col-span- bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                className="md:col-span-1 bg-[#1a1a24] border border-white/5 hover:border-green-700/30 rounded-xl p-6 flex flex-col justify-between gap-6 transition-all duration-300"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.1 }}
-                                viewport={{ once: true, amount: 0.3 }}
+                                viewport={{ once: true, amount: 0.2 }}
                             >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    WORLD IS A FUCK
-                                </p>
+                                <div>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="text-xs text-blue-400 tracking-widest uppercase font-medium">Internship</span>
+                                        <span className="text-xs text-slate-600">2025</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-100 mb-2">
+                                        SDO HR Portal
+                                    </h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        HR management portal built for a Schools Division Office. Handles employee records, document management, and file uploads.
+                                    </p>
+                                </div>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {['Laravel', 'AdminLTE v4', 'Bootstrap', 'jQuery', 'Docker'].map((tag) => (
+                                            <span key={tag} className="text-xs px-2 py-1 rounded-md bg-white/5 text-slate-400 border border-white/5">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            GitHub ↗
+                                        </Button>
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            Live ↗
+                                        </Button>
+                                    </div>
+                                </div>
                             </motion.div>
 
+                            {/* EXPENSE TRACKER */}
                             <motion.div
-                                className="md:col-span-1 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                className="md:col-span-1 bg-[#1a1a24] border border-white/5 hover:border-green-700/30 rounded-xl p-6 flex flex-col justify-between gap-6 transition-all duration-300"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.2 }}
-                                viewport={{ once: true, amount: 0.3 }}
+                                viewport={{ once: true, amount: 0.2 }}
                             >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    鬼神 Kill Em All 1989
-                                </p>
+                                <div>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="text-xs text-green-400 tracking-widest uppercase font-medium">Personal</span>
+                                        <span className="text-xs text-slate-600">2025</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-100 mb-2">
+                                        Expense Tracker
+                                    </h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        Full-stack MERN expense tracker built to practice REST API design. Supports income and expense CRUD, category tagging, and a dashboard summary.
+                                    </p>
+                                </div>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {['MongoDB', 'Express', 'React', 'Node', 'Tailwind', 'shadcn'].map((tag) => (
+                                            <span key={tag} className="text-xs px-2 py-1 rounded-md bg-white/5 text-slate-400 border border-white/5">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            GitHub ↗
+                                        </Button>
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            Live ↗
+                                        </Button>
+                                    </div>
+                                </div>
                             </motion.div>
 
+                            {/* FILLER — This Portfolio */}
                             <motion.div
-                                className="md:col-span-2 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                className="md:col-span-2 bg-[#1a1a24] border border-white/5 hover:border-green-700/30 rounded-xl p-6 flex flex-col justify-between gap-6 transition-all duration-300"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.3 }}
-                                viewport={{ once: true, amount: 0.3 }}
+                                viewport={{ once: true, amount: 0.2 }}
                             >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    I am trash man
-                                </p>
+                                <div>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="text-xs text-purple-400 tracking-widest uppercase font-medium">Personal</span>
+                                        <span className="text-xs text-slate-600">2025</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-100 mb-2">
+                                        This Portfolio
+                                    </h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        One-page portfolio built to test out MERN, Framer Motion, Three.js, and canvas particle systems. The page you're currently looking at.
+                                    </p>
+                                </div>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {['React', 'Vite', 'Tailwind', 'Framer Motion', 'Three.js', 'shadcn', 'Canvas API'].map((tag) => (
+                                            <span key={tag} className="text-xs px-2 py-1 rounded-md bg-white/5 text-slate-400 border border-white/5">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            GitHub ↗
+                                        </Button>
+                                        <Button size="sm" variant="outline" className="border-white/10 text-slate-400 hover:text-white hover:border-white/20 bg-transparent text-xs">
+                                            You're here ↗
+                                        </Button>
+                                    </div>
+                                </div>
                             </motion.div>
 
+                            {/* FILLER — Coming Soon */}
                             <motion.div
-                                className="md:col-span-3 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                className="md:col-span-3 bg-[#1a1a24] border border-dashed border-white/10 rounded-xl p-6 flex items-center justify-center min-h-24 transition-all duration-300"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.4 }}
-                                viewport={{ once: true, amount: 0.3 }}
+                                viewport={{ once: true, amount: 0.2 }}
                             >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    410,757,864,530 DEAD COPS
-                                </p>
-                            </motion.div>
-
-                            <motion.div
-                                className="md:col-span-2 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    BORN TO DIE
-                                </p>
-                            </motion.div>
-
-                            <motion.div
-                                className="md:col-span- bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    WORLD IS A FUCK
-                                </p>
-                            </motion.div>
-
-                            <motion.div
-                                className="md:col-span-1 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    鬼神 Kill Em All 1989
-                                </p>
-                            </motion.div>
-
-                            <motion.div
-                                className="md:col-span-2 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    I am trash man
-                                </p>
-                            </motion.div>
-
-                            <motion.div
-                                className="md:col-span-3 bg-[#2d2d3a] p-8 rounded-xl border border-[#44445a] flex items-center justify-center"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.4 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <p className="text-slate-200 text-lg font-semibold text-center">
-                                    410,757,864,530 DEAD COPS
+                                <p className="text-slate-600 text-sm tracking-widest uppercase">
+                                    More coming soon —
                                 </p>
                             </motion.div>
 
                         </div>
-
                     </div>
-
                 </motion.section>
 
-                {/* EXAMPLE SECTION - MARQUEE */}
+                {/* EXAMPLE SECTION - MARQUEE 
                 <motion.section
                     className="py-20 px-6"
                     initial={{ opacity: 0 }}
@@ -557,86 +461,255 @@ function App() {
                     </div>
 
                 </motion.section>
+                */}
 
-                {/* EXAMPLE SECTION example section 2 transition ruins the responsivenss as wellz2*/}
+                {/* ART */}
                 <motion.section
                     id="art"
-                    className="bg-[#4f5f4f] py-20 px-6"
-                    initial={{ opacity: 0, x: -100 }}
-                    whileInView={{ opacity: 1, x: 1 }}
+                    className="relative py-24 px-6 overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
                     transition={{ duration: 1, ease: "easeOut" }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: false, amount: 0.2 }}
                 >
-                    <div className="absolute inset-0 h-full w-full">
-                        <Particles />
-                    </div>
+                    <div className="relative z-10 max-w-6xl mx-auto">
 
-                    <div className="max-w-4xl mx-auto text-center relative z-10 pointer-events-auto">
-
-                        <h2 className="text-3xl font-bold mb-6 text-slate-100">
-                            EXAMPLE SECTION # 2
-                        </h2>
-
-                        <p className="mb-8 text-slate-200 text-lg leading-relaxed">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-
-                        <button className="bg-green-600 text-slate-950 px-6 py-3 rounded-lg hover:bg-green-500">
-                            Start Building
-                        </button>
-
-                    </div>
-
-                </motion.section>
-
-                {/* EXAMPLE SECTION - EVANGELION TITLE CARD / ART */}
-                <section id="art" className="py-20 px-6 overflow-hidden">
-                    <div className="max-w-6xl mx-auto">
-                        <div className="text-left">
-                            <h2
-                                className="font-black text-slate-100 leading-none tracking-tight w-full"
-                                style={{
-                                    fontFamily: 'Times New Roman',
-                                    fontSize: 'clamp(2.5rem, 6vw, 5.5rem)'
-                                }}
-                            >
-                                SAMUEL<br />
-                                SALVADORA<br />
-                                <span
-                                    className="block"
-                                    style={{ fontSize: 'clamp(3rem, 10vw, 8rem)' }}
-                                >
-                                    PORTFOLIO
-                                </span>
+                        {/* HEADER */}
+                        <div className="mb-14 text-left">
+                            <p className="text-xs text-green-500 tracking-[0.3em] uppercase mb-3 font-medium">
+                                Creative Work
+                            </p>
+                            <h2 className="text-4xl md:text-5xl font-black text-slate-100 leading-tight mb-4">
+                                Digital Art &<br />Illustrations
                             </h2>
-
-                            <p
-                                className="text-slate-100 font-bold mt-6"
-                                style={{
-                                    fontFamily: 'Georgia, serif',
-                                    fontSize: 'clamp(1.25rem, 3vw, 1.875rem)'
-                                }}
-                            >
-                                FINALE:<br />
-                                <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.5rem)' }}>
-                                    Take care of yourself.
-                                </span>
+                            <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
+                                Freelance digital art for personal and commercial projects —
+                                character design, concept art, and illustrations.
                             </p>
                         </div>
+
+                        {/* FEATURED PIECE — full width */}
+                        <motion.div
+                            className="relative group overflow-hidden rounded-xl bg-[#1a2420] border border-white/5 w-full h-64 md:h-80 mb-4"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0 }}
+                            viewport={{ once: true }}
+                        >
+                            <div className="w-full h-full bg-gradient-to-br from-green-900/30 to-slate-900/60 flex items-end p-6">
+                                <div>
+                                    <span className="text-xs text-green-400 tracking-widest uppercase">Featured</span>
+                                    <p className="text-slate-100 font-semibold text-xl mt-1">Untitled No. 1</p>
+                                    <p className="text-slate-500 text-xs">Digital Illustration · 2025</p>
+                                </div>
+                            </div>
+                            <div className="absolute inset-0 bg-green-500/0 group-hover:bg-green-500/5 transition-all duration-300" />
+                        </motion.div>
+
+                        {/* SMALLER PIECES — 4 in a row */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-12">
+                            {[
+                                { title: 'Character Study', year: '2025', type: 'Character Design' },
+                                { title: 'Concept Art', year: '2024', type: 'Environment' },
+                                { title: 'Commission', year: '2025', type: 'Portrait' },
+                                { title: 'Personal Work', year: '2024', type: 'Abstract' },
+                            ].map((piece, i) => (
+                                <motion.div
+                                    key={piece.title}
+                                    className="relative group overflow-hidden rounded-xl bg-[#1a2420] border border-white/5 aspect-square"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: 0.1 * (i + 1) }}
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="w-full h-full bg-gradient-to-br from-slate-800/40 to-green-900/20 flex items-end p-3 md:p-4">
+                                        <div>
+                                            <p className="text-slate-200 font-medium text-sm">{piece.title}</p>
+                                            <p className="text-slate-500 text-xs">{piece.type} · {piece.year}</p>
+                                        </div>
+                                    </div>
+                                    <div className="absolute inset-0 bg-green-500/0 group-hover:bg-green-500/5 transition-all duration-300" />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* FOOTER ROW */}
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <p className="text-slate-500 text-sm">
+                                Available for commissions and collaborations.
+                            </p>
+                            <div className="flex gap-3">
+                                <Button
+                                    className="bg-green-600 hover:bg-green-500 text-slate-950 text-sm font-semibold"
+                                >
+                                    Visit my VGen ↗
+                                </Button>
+                            </div>
+                        </div>
+
+                    </div>
+                </motion.section>
+
+                {/* THOUGHTS */}
+                <motion.section
+                    id="thoughts"
+                    className="py-20 px-6"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                >
+                    <div className="max-w-6xl mx-auto">
+
+                        {/* HEADER */}
+                        <div className="mb-14 text-left">
+                            <p className="text-xs text-green-500 tracking-[0.3em] uppercase mb-3 font-medium">
+                                Guestbook
+                            </p>
+                            <h2 className="text-4xl md:text-5xl font-black text-slate-100 leading-tight mb-4">
+                                Drop a Thought
+                            </h2>
+                            <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
+                                Say hi, leave feedback, or just write whatever. No rules.
+                            </p>
+                        </div>
+
+                        {/* THOUGHT CARDS */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[
+                                { seed: 'samuel1', name: 'Alex Johnson', stars: 5, text: 'Amazing work! The portfolio is incredibly well-designed with smooth animations and great attention to detail.' },
+                                { seed: 'samuel2', name: 'Sarah Chen', stars: 5, text: 'Perfect MERN stack implementation. The code is clean, the UI is beautiful, and everything works flawlessly.' },
+                                { seed: 'samuel3', name: 'Michael Park', stars: 4, text: 'Fantastic developer! Great communication, timely delivery, and exceptional attention to detail. Would work with again.' },
+                                { seed: 'samuel4', name: 'Emma Rodriguez', stars: 5, text: 'The 3D model integration was creative and the whole site feels modern. Best portfolio I\'ve seen in a while!' },
+                                { seed: 'samuel5', name: 'David Kumar', stars: 5, text: 'Impressive use of Framer Motion and Tailwind CSS. The animations are smooth and the design is cohesive throughout.' },
+                                { seed: 'samuel6', name: 'Lisa Wang', stars: 1, text: 'Tanginamo.' },
+                            ].map((entry, i) => (
+                                <motion.div
+                                    key={entry.seed}
+                                    className="bg-[#1a1a24] p-6 rounded-xl border border-white/5 hover:border-green-700/30 transition-all duration-300"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: 0.08 * i }}
+                                    viewport={{ once: true, amount: 0.3 }}
+                                >
+                                    {/* card header */}
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <img
+                                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${entry.seed}`}
+                                            alt={entry.name}
+                                            className="w-10 h-10 rounded-full border border-white/10"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-slate-100 font-semibold text-sm truncate">{entry.name}</h3>
+                                            <div className="flex gap-0.5 text-yellow-400 text-xs mt-0.5">
+                                                {'★'.repeat(entry.stars)}
+                                                {entry.stars < 5 && <span className="text-slate-600">{'★'.repeat(5 - entry.stars)}</span>}
+                                            </div>
+                                        </div>
+                                        <span className="text-slate-600 text-xs shrink-0">just now</span>
+                                    </div>
+
+                                    {/* card body */}
+                                    <p className="text-slate-400 text-sm leading-relaxed">
+                                        {entry.text}
+                                    </p>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* POST INPUT — no function yet */}
+                        <div className="bg-[#1a1a24] border border-white/5 rounded-xl p-5 mt-12">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center">
+                                    <span className="text-green-400 text-xs font-bold">?</span>
+                                </div>
+                                <span className="text-slate-500 text-sm">Anonymous</span>
+                            </div>
+                            <textarea
+                                className="w-full bg-transparent text-slate-200 placeholder:text-slate-600 text-sm resize-none outline-none leading-relaxed min-h-[80px]"
+                                placeholder="Write something..."
+                                disabled
+                            />
+                            
+                            <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/5">
+                                <span className="text-slate-600 text-xs">doesnt work yet sonion</span>
+                                <Button
+                                    disabled
+                                    className="bg-green-600 text-slate-950 text-xs font-semibold opacity-40 cursor-not-allowed"
+                                >
+                                    Post
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </motion.section>
+
+                {/* EXAMPLE SECTION - EVANGELION TITLE CARD*/}
+                <section className="py-20 px-6 overflow-hidden">
+                    <div className="max-w-6xl mx-auto">
+
                     </div>
                 </section>
 
             </main>
 
             {/* FOOTER */}
-            <footer className="bg-[#2d2d3a] py-4 text-center border-t border-[#44445a] relative z-10">
+            <footer className="bg-[#2d2d3a] border-t border-white/5 relative z-10">
 
-                <p className="text-sm text-slate-400">
-                    MERN Test
-                    Go back to <a href="/" className="text-green-500 hover:underline">
-                        Home
-                    </a>
-                </p>
+                <div className="max-w-6xl mx-auto px-6 py-12">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+
+                        {/* BRAND */}
+                        <div className="col-span-1">
+                            <div className="flex items-center gap-2.5 mb-4">
+                                <img src="/logo.png" alt="logo" className="w-7 h-7" />
+                                <span className="text-sm font-semibold tracking-widest text-slate-200 uppercase">
+                                    Sam Salvadora Portfolio
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* NAV */}
+                        <div className="col-span-1">
+                            <p className="text-xs text-slate-500 tracking-[0.2em] uppercase mb-4">Navigate</p>
+                            <div className="flex flex-col gap-2">
+                                {[
+                                    { label: 'Home',     href: '#'          },
+                                    { label: 'About',    href: '#about'     },
+                                    { label: 'Projects', href: '#projects'  },
+                                    { label: 'Art',      href: '#art'       },
+                                    { label: 'Thoughts', href: '#thoughts'  },
+                                ].map((link) => (
+                                    <a
+                                        key={link.label}
+                                        href={link.href}
+                                        className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* CONTACT */}
+                        <div className="col-span-1">
+                            <p className="text-xs text-slate-500 tracking-[0.2em] uppercase mb-4">Contact</p>
+                            <div className="flex flex-col gap-2">
+                                <a href="mailto:your@email.com" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
+                                    your@email.com
+                                </a>
+                                <a href="#" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
+                                    GitHub ↗
+                                </a>
+                                <a href="#" className="text-sm text-slate-400 hover:text-green-400 transition-colors duration-200 w-fit">
+                                    LinkedIn ↗
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
 
             </footer>
 
