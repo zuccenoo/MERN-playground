@@ -37,37 +37,42 @@ function App() {
     useEffect(() => {
         const fetchArt = async () => {
             try {
-                const res = await fetch('/api/reddit')
+                const res = await fetch(
+                    'https://api.rss2json.com/v1/api.json?rss_url=https://www.reddit.com/user/zuccenoo/submitted.rss'
+                )
                 const data = await res.json()
 
-                const posts = data.data.children
-                    .filter(post => 
-                        post.data.is_gallery || 
-                        post.data.post_hint === 'image'
-                    )
-                    .map(post => {
-                        // gallery posts — grab first image from media_metadata
-                        if (post.data.is_gallery && post.data.media_metadata) {
-                            const firstKey = Object.keys(post.data.media_metadata)[0]
-                            const meta = post.data.media_metadata[firstKey]
-                            // decode HTML entities in URL
-                            const url = meta.p?.[meta.p.length - 1]?.u?.replace(/&amp;/g, '&')
-                            return {
-                                title: post.data.title,
-                                img: url,
-                                subreddit: post.data.subreddit,
-                                url: `https://reddit.com${post.data.permalink}`,
+                if (data.status !== 'ok') {
+                    console.error('RSS fetch failed:', data)
+                    return
+                }
+
+                const posts = data.items
+                    .map(item => {
+                        // try thumbnail first
+                        let img = item.thumbnail && item.thumbnail !== 'self' && item.thumbnail !== ''
+                            ? item.thumbnail
+                            : null
+
+                        // if no thumbnail, parse image from description HTML
+                        if (!img) {
+                            const match = item.description.match(/https:\/\/preview\.redd\.it\/[^"'\s]+/)
+                            if (match) {
+                                // convert preview.redd.it to i.redd.it and strip query params
+                                const rawUrl = match[0].replace(/&amp;/g, '&')
+                                const cleanPath = rawUrl.split('?')[0]
+                                img = cleanPath.replace('preview.redd.it', 'i.redd.it')
                             }
                         }
-                        // single image posts
+
                         return {
-                            title: post.data.title,
-                            img: post.data.url,
-                            subreddit: post.data.subreddit,
-                            url: `https://reddit.com${post.data.permalink}`,
+                            title: item.title,
+                            img,
+                            url: item.link,
+                            date: item.pubDate,
                         }
                     })
-                    .filter(p => p.img) // drop any without images
+                    .filter(p => p.img)
 
                 setArtworks(posts)
             } catch (err) {
