@@ -588,8 +588,8 @@ function App() {
                                         viewport={{ once: true }}
                                     >
                                         <img
-                                            src={piece.img}
-                                            alt={piece.title}
+                                            src={artworks[0].img}
+                                            alt={artworks[0].title}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
                                                 e.target.style.display = 'none' // hide broken image icon
