@@ -157,7 +157,6 @@ function App() {
                             </SheetTrigger>
                             <SheetContent side="right" className="bg-[#2d2d3a]/95 backdrop-blur-md border-l border-white/5 w-64 p-0">
 
-                                {/* DRAWER HEADER */}
                                 <div className="px-6 py-5 border-b border-white/5 flex items-center gap-3">
                                     <img src="../logo.png" alt="logo" className="w-7 h-7" />
                                     <SheetTitle className="text-sm font-semibold tracking-widest text-slate-200 uppercase">
@@ -165,7 +164,6 @@ function App() {
                                     </SheetTitle>
                                 </div>
 
-                                {/* DRAWER LINKS */}
                                 <div className="px-3 py-4 flex flex-col gap-1">
                                     {['Home', 'About', 'Projects', 'Art'].map((item) => (
                                         <a
