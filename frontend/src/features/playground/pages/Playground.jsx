@@ -73,7 +73,8 @@ function App() {
                         }
                     })
                     .filter(p => p.img)
-
+                    
+                    console.log('Final image URLs:', posts.map(p => p.img))
                 setArtworks(posts)
             } catch (err) {
                 console.error('Reddit fetch failed:', err)
