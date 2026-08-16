@@ -588,9 +588,12 @@ function App() {
                                         viewport={{ once: true }}
                                     >
                                         <img
-                                            src={artworks[0].img}
-                                            alt={artworks[0].title}
+                                            src={piece.img}
+                                            alt={piece.title}
                                             className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none' // hide broken image icon
+                                            }}
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-6">
                                             <div>
@@ -621,6 +624,9 @@ function App() {
                                                 src={piece.img}
                                                 alt={piece.title}
                                                 className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none' // hide broken image icon
+                                                }}
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-3">
                                                 <div>
