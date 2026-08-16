@@ -49,19 +49,24 @@ function App() {
 
                 const posts = data.items
                     .map(item => {
-                        // try thumbnail first
-                        let img = item.thumbnail && item.thumbnail !== 'self' && item.thumbnail !== ''
-                            ? item.thumbnail
-                            : null
+                        let img = null
 
-                        // if no thumbnail, parse image from description HTML
+                        // clean thumbnail if it exists
+                        if (item.thumbnail && item.thumbnail !== 'self' && item.thumbnail !== '' && item.thumbnail !== 'default') {
+                            img = item.thumbnail
+                                .replace(/&amp;/g, '&')  // decode HTML entities
+                                .split('?')[0]           // strip query params
+                                .replace('preview.redd.it', 'i.redd.it') // use public CDN
+                        }
+
+                        // fallback — parse from description
                         if (!img) {
                             const match = item.description.match(/https:\/\/preview\.redd\.it\/[^"'\s]+/)
                             if (match) {
-                                // convert preview.redd.it to i.redd.it and strip query params
-                                const rawUrl = match[0].replace(/&amp;/g, '&')
-                                const cleanPath = rawUrl.split('?')[0]
-                                img = cleanPath.replace('preview.redd.it', 'i.redd.it')
+                                img = match[0]
+                                    .replace(/&amp;/g, '&')
+                                    .split('?')[0]
+                                    .replace('preview.redd.it', 'i.redd.it')
                             }
                         }
 
@@ -73,8 +78,8 @@ function App() {
                         }
                     })
                     .filter(p => p.img)
-                    
-                    console.log('Final image URLs:', posts.map(p => p.img))
+
+                console.log('Final image URLs:', posts.map(p => p.img))
                 setArtworks(posts)
             } catch (err) {
                 console.error('Reddit fetch failed:', err)
