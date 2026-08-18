@@ -16,10 +16,14 @@ import {
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { Separator } from '@/components/ui/separator'
-import { Menu, } from 'lucide-react'
-
+import { Menu, Star, RefreshCw } from 'lucide-react'
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { fetchThoughts, postThought } from "../services/thought.service";
+import toast from 'react-hot-toast'
 
 function App() {
+    //nav
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const sectionMap = {
@@ -33,6 +37,22 @@ function App() {
     // reddit api to fetch art posts
     const [artworks, setArtworks] = useState([])
     const [loading, setLoading] = useState(true)
+
+    // thoughts
+    const [thoughts, setThoughts] = useState([]);
+    const [loadingThoughts, setLoadingThoughts] = useState(true);
+
+    const [thoughtName, setThoughtName] = useState("");
+    const [thoughtText, setThoughtText] = useState("");
+    const [thoughtStars, setThoughtStars] = useState(0);
+    const [hoverStars, setHoverStars] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
+
+    const generateAvatarSeeds = () =>
+        Array.from({ length: 6 }, () => Math.random().toString(36).substring(2, 10));
+
+    const [avatarOptions, setAvatarOptions] = useState(generateAvatarSeeds());
+    const [selectedAvatar, setSelectedAvatar] = useState(avatarOptions[0]);
 
     useEffect(() => {
         const fetchArt = async () => {
@@ -90,6 +110,51 @@ function App() {
 
         fetchArt()
     }, [])
+
+    useEffect(() => {
+        const loadThoughts = async () => {
+            try {
+                const data = await fetchThoughts();
+                setThoughts(data);
+            } catch (err) {
+                console.error("Failed to load thoughts:", err);
+            } finally {
+                setLoadingThoughts(false);
+            }
+        };
+
+        loadThoughts();
+    }, []);
+
+    const handlePostThought = async () => {
+        if (!thoughtText.trim() || thoughtStars === 0) return;
+
+        setSubmitting(true);
+        try {
+            const newThought = await postThought({
+                name: thoughtName.trim() || "Anonymous",
+                text: thoughtText.trim(),
+                stars: thoughtStars,
+                avatar: selectedAvatar,
+            });
+
+            setThoughts((prev) => [newThought, ...prev]);
+            setThoughtName("");
+            setThoughtText("");
+            setThoughtStars(0);
+
+            const freshSeeds = generateAvatarSeeds();
+            setAvatarOptions(freshSeeds);
+            setSelectedAvatar(freshSeeds[0]);
+
+            toast.success("Thought posted!");
+        } catch (err) {
+            console.error("Failed to post thought:", err);
+            toast.error("Couldn't post that — try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     return (
         <div className="min-h-screen flex flex-col text-slate-200 relative" style={{ scrollBehavior: 'smooth' }}>
@@ -479,69 +544,6 @@ function App() {
                     </div>
                 </motion.section>
 
-                {/* EXAMPLE SECTION - MARQUEE 
-                <motion.section
-                    className="py-20 px-6"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    viewport={{ once: false, amount: 0.2 }}
-                >
-
-                    <div className="max-w-6xl mx-auto">
-
-                        <motion.h2
-                            className="text-4xl font-bold mb-4 text-slate-100 text-center overflow-hidden"
-                            initial={{ opacity: 0, x: -100 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.7, ease: "easeOut", delay: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                        >
-                            Featured Example
-                        </motion.h2>
-
-                        <motion.div
-                            className="relative w-full overflow-hidden"
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                        >
-                            <motion.p
-                                className="text-slate-400 text-lg font-semibold whitespace-nowrap"
-                                animate={{ x: ["100%", "-100%"] }}
-                                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.              </motion.p>
-                        </motion.div>
-
-                        <motion.div
-                            className="p-8 md:p-12"
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-                            viewport={{ once: false, amount: 0.3 }}
-                        >
-
-                            <h3 className="text-2xl font-bold text-green-500 mb-6">
-                                The Journey Begins
-                            </h3>
-
-                            <p className="text-slate-200 text-justify text-lg leading-relaxed mb-6">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                            </p>
-
-                        </motion.div>
-
-                    </div>
-
-                </motion.section>
-                */}
-
                 {/* ART */}
                 <motion.section
                     id="art"
@@ -689,74 +691,143 @@ function App() {
                                 Drop a Thought
                             </h2>
                             <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
-                                Leave a message typa section, note that these are sample thoughts and profanity may or may not be involved
+                                Leave a message typa section, note that these are real submitted thoughts and profanity may or may not be involved
                             </p>
                         </div>
 
                         {/* THOUGHT CARDS */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
-                                { seed: 'samuel1', name: 'Alex Johnson', stars: 5, text: 'Amazing work! The portfolio is incredibly well-designed with smooth animations and great attention to detail.' },
-                                { seed: 'samuel2', name: 'Sarah Chen', stars: 5, text: 'Perfect MERN stack implementation. The code is clean, the UI is beautiful, and everything works flawlessly.' },
-                                { seed: 'samuel3', name: 'Michael Park', stars: 4, text: 'Fantastic developer! Great communication, timely delivery, and exceptional attention to detail. Would work with again.' },
-                                { seed: 'samuel4', name: 'Emma Rodriguez', stars: 5, text: 'The 3D model integration was creative and the whole site feels modern. Best portfolio I\'ve seen in a while!' },
-                                { seed: 'samuel5', name: 'David Kumar', stars: 5, text: 'Impressive use of Framer Motion and Tailwind CSS. The animations are smooth and the design is cohesive throughout.' },
-                                { seed: 'samuel6', name: 'Lisa Wang', stars: 1, text: 'Tanginamo.' },
-                            ].map((entry, i) => (
-                                <motion.div
-                                    key={entry.seed}
-                                    className="bg-[#1a1a24] p-6 rounded-xl border border-white/5 hover:border-green-700/30 transition-all duration-300"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.08 * i }}
-                                    viewport={{ once: true, amount: 0.3 }}
-                                >
-                                    {/* card header */}
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <img
-                                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${entry.seed}`}
-                                            alt={entry.name}
-                                            className="w-10 h-10 rounded-full border border-white/10"
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-slate-100 font-semibold text-sm truncate">{entry.name}</h3>
-                                            <div className="flex gap-0.5 text-yellow-400 text-xs mt-0.5">
-                                                {'★'.repeat(entry.stars)}
-                                                {entry.stars < 5 && <span className="text-slate-600">{'★'.repeat(5 - entry.stars)}</span>}
-                                            </div>
-                                        </div>
-                                        <span className="text-slate-600 text-xs shrink-0">just now</span>
-                                    </div>
-
-                                    {/* card body */}
-                                    <p className="text-slate-400 text-sm leading-relaxed">
-                                        {entry.text}
-                                    </p>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        {/* POST INPUT — no function yet */}
-                        <div className="bg-[#1a1a24] border border-white/5 rounded-xl p-5 mt-12">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center">
-                                    <span className="text-green-400 text-xs font-bold">?</span>
-                                </div>
-                                <span className="text-slate-500 text-sm">Anonymous</span>
+                        {loadingThoughts ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {Array.from({ length: 3 }).map((_, i) => (
+                                    <div key={i} className="h-40 rounded-xl bg-[#1a1a24] border border-white/5 animate-pulse" />
+                                ))}
                             </div>
-                            <textarea
-                                className="w-full bg-transparent text-slate-200 placeholder:text-slate-600 text-sm resize-none outline-none leading-relaxed min-h-[80px]"
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {thoughts.length === 0 && (
+                                    <p className="text-slate-600 text-sm col-span-full">No thoughts yet — be the first to drop one.</p>
+                                )}
+                                {thoughts.map((entry, i) => (
+                                    <motion.div
+                                        key={entry._id}
+                                        className="bg-[#1a1a24] p-6 rounded-xl border border-white/5 hover:border-green-700/30 transition-all duration-300"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: 0.08 * i }}
+                                        viewport={{ once: true, amount: 0.3 }}
+                                    >
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <img
+                                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${entry.avatar}`}
+                                                alt={entry.name}
+                                                className="w-10 h-10 rounded-full border border-white/10"
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-slate-100 font-semibold text-sm truncate">{entry.name}</h3>
+                                                <div className="flex gap-0.5 text-yellow-400 text-xs mt-0.5">
+                                                    {'★'.repeat(entry.stars)}
+                                                    {entry.stars < 5 && <span className="text-slate-600">{'★'.repeat(5 - entry.stars)}</span>}
+                                                </div>
+                                            </div>
+                                            <span className="text-slate-600 text-xs shrink-0">
+                                                {new Date(entry.createdAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-slate-400 text-sm leading-relaxed">
+                                            {entry.text}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* POST INPUT */}
+                        <div className="bg-[#1a1a24] border border-white/5 rounded-xl p-5 mt-12">
+
+                            {/* AVATAR PICKER */}
+                            <div className="mb-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-slate-500 text-xs">Pick an avatar</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const freshSeeds = generateAvatarSeeds();
+                                            setAvatarOptions(freshSeeds);
+                                            setSelectedAvatar(freshSeeds[0]);
+                                        }}
+                                        className="text-slate-500 hover:text-green-400 transition-colors"
+                                    >
+                                        <RefreshCw className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                                <div className="flex gap-2">
+                                    {avatarOptions.map((seed) => (
+                                        <button
+                                            key={seed}
+                                            type="button"
+                                            onClick={() => setSelectedAvatar(seed)}
+                                            className={`rounded-full transition-all ${selectedAvatar === seed
+                                                ? "ring-2 ring-green-500 ring-offset-2 ring-offset-[#1a1a24]"
+                                                : "opacity-50 hover:opacity-100"
+                                                }`}
+                                        >
+                                            <img
+                                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`}
+                                                alt="avatar option"
+                                                className="w-9 h-9 rounded-full"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <Input
+                                value={thoughtName}
+                                onChange={(e) => setThoughtName(e.target.value)}
+                                placeholder="Your name (optional)"
+                                maxLength={50}
+                                className="bg-transparent border-white/10 text-slate-200 placeholder:text-slate-600 mb-4"
+                            />
+                                <span className="text-slate-500 text-xs">Rate what you witnessed</span>
+
+                            <div className="flex items-center gap-1 mb-4">
+
+                                {[1, 2, 3, 4, 5].map((n) => (
+                                    <button
+                                        key={n}
+                                        type="button"
+                                        onClick={() => setThoughtStars(n)}
+                                        onMouseEnter={() => setHoverStars(n)}
+                                        onMouseLeave={() => setHoverStars(0)}
+                                        className="p-0.5"
+                                    >
+                                        <Star
+                                            className={`w-5 h-5 ${(hoverStars || thoughtStars) >= n
+                                                ? "fill-yellow-400 text-yellow-400"
+                                                : "text-slate-700"
+                                                }`}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+
+                            <Textarea
+                                value={thoughtText}
+                                onChange={(e) => setThoughtText(e.target.value)}
                                 placeholder="Write something..."
-                                disabled
+                                maxLength={500}
+                                className="w-full bg-transparent text-slate-200 placeholder:text-slate-600 text-sm resize-none outline-none leading-relaxed min-h-[80px] border-white/10"
                             />
 
                             <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/5">
-                                <span className="text-slate-600 text-xs">doesnt work yet sonion</span>
+                                <span className="text-slate-600 text-xs">{thoughtText.length}/500</span>
                                 <Button
-                                    disabled
-                                    className="bg-green-600 text-slate-950 text-xs font-semibold opacity-40 cursor-not-allowed"
+                                    onClick={handlePostThought}
+                                    disabled={submitting || !thoughtText.trim() || thoughtStars === 0}
+                                    className="bg-green-600 text-slate-950 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
                                 >
-                                    Post
+                                    {submitting ? "Posting..." : "Post"}
                                 </Button>
                             </div>
                         </div>
