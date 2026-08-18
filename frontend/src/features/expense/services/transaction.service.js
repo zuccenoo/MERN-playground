@@ -1,4 +1,4 @@
-import api from "../../../shared/api/axios";
+import api from "../../../services/api.js";
 import { ENDPOINTS } from "../../../shared/api/endpoints";
 
 export const getTransactions = async () => {
