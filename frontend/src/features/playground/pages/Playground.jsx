@@ -20,6 +20,7 @@ import { Menu, Star, RefreshCw } from 'lucide-react'
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { fetchThoughts, postThought } from "../services/thought.service";
+import { fetchRedditArt } from '../services/reddit.service'
 import toast from 'react-hot-toast'
 
 function App() {
@@ -33,10 +34,6 @@ function App() {
         'Art': '#art',
         'Contact': '#contact'
     };
-
-    // reddit api to fetch art posts
-    const [artworks, setArtworks] = useState([])
-    const [loading, setLoading] = useState(true)
 
     // thoughts
     const [thoughts, setThoughts] = useState([]);
@@ -54,62 +51,24 @@ function App() {
     const [avatarOptions, setAvatarOptions] = useState(generateAvatarSeeds());
     const [selectedAvatar, setSelectedAvatar] = useState(avatarOptions[0]);
 
+    // reddit api to fetch art posts
+    const [artworks, setArtworks] = useState([])
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
-        const fetchArt = async () => {
+        const loadArt = async () => {
             try {
-                const res = await fetch(
-                    'https://api.rss2json.com/v1/api.json?rss_url=https://www.reddit.com/user/zuccenoo/submitted.rss'
-                )
-                const data = await res.json()
-
-                if (data.status !== 'ok') {
-                    console.error('RSS fetch failed:', data)
-                    return
-                }
-
-                const posts = data.items
-                    .map(item => {
-                        let img = null
-
-                        // clean thumbnail if it exists
-                        if (item.thumbnail && item.thumbnail !== 'self' && item.thumbnail !== '' && item.thumbnail !== 'default') {
-                            img = item.thumbnail
-                                .replace(/&amp;/g, '&')  // decode HTML entities
-                                .split('?')[0]           // strip query params
-                                .replace('preview.redd.it', 'i.redd.it') // use public CDN
-                        }
-
-                        // fallback — parse from description
-                        if (!img) {
-                            const match = item.description.match(/https:\/\/preview\.redd\.it\/[^"'\s]+/)
-                            if (match) {
-                                img = match[0]
-                                    .replace(/&amp;/g, '&')
-                                    .split('?')[0]
-                                    .replace('preview.redd.it', 'i.redd.it')
-                            }
-                        }
-
-                        return {
-                            title: item.title,
-                            img,
-                            url: item.link,
-                            date: item.pubDate,
-                        }
-                    })
-                    .filter(p => p.img)
-
-                console.log('Final image URLs:', posts.map(p => p.img))
-                setArtworks(posts)
+                const posts = await fetchRedditArt();
+                setArtworks(posts);
             } catch (err) {
-                console.error('Reddit fetch failed:', err)
+                console.error('Reddit fetch failed:', err);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
+        };
 
-        fetchArt()
-    }, [])
+        loadArt();
+    }, []);
 
     useEffect(() => {
         const loadThoughts = async () => {
@@ -222,11 +181,13 @@ function App() {
                             </SheetTrigger>
                             <SheetContent side="right" className="bg-[#2d2d3a]/95 backdrop-blur-md border-l border-white/5 w-64 p-0">
 
-                                <div className="px-6 py-5 border-b border-white/5 flex items-center gap-3">
-                                    <img src="../logo.png" alt="logo" className="w-7 h-7" />
-                                    <SheetTitle className="text-sm font-semibold tracking-widest text-slate-200 uppercase">
-                                        Sam<span className="text-green-500">.</span>
-                                    </SheetTitle>
+                                <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <img src="../logo.png" alt="logo" className="w-7 h-7" />
+                                        <SheetTitle className="text-sm font-semibold tracking-widest text-slate-200 uppercase">
+                                            Sam Salvadora
+                                        </SheetTitle>
+                                    </div>
                                 </div>
 
                                 <div className="px-3 py-4 flex flex-col gap-1">
@@ -258,7 +219,9 @@ function App() {
 
                                 {/* DRAWER FOOTER */}
                                 <div className="absolute bottom-0 left-0 right-0 px-6 py-4 border-t border-white/5">
-                                    <p className="text-xs text-slate-600 tracking-wider">© 2025 Samuel Salvadora</p>
+                                    <p className="text-xs text-slate-600 tracking-wider">
+                                        {new Date().getFullYear()} Samuel Salvadora. This is a personal website and not a professional portfolio.
+                                    </p>
                                 </div>
 
                             </SheetContent>
@@ -273,16 +236,33 @@ function App() {
                 <section id="home"
                     className="relative text-center px-6 py-24 overflow-hidden h-screen flex flex-col items-center justify-center ">
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-6 text-center md:text-left">
-                        <img src="../logo.png" alt="logo" className="w-14 md:w-20" />
+                    <motion.div
+                        className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-6 text-center md:text-left"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, ease: "easeOut" }}
+                    >
+                        <motion.img
+                            src="../logo.png"
+                            alt="logo"
+                            className="w-14 md:w-20"
+                            initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                        />
                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100 leading-tight">
                             SAMUEL SALVADORA PORTFOLIO
                         </h2>
-                    </div>
+                    </motion.div>
 
-                    <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-8 text-justify leading-relaxed">
-                        <TypeWriter text="Boomshakalaka I made this portfolio testing a MERN stack, mainly frontend. Watch this text type in like one of those programmer portfolios you always see." speed={50} />
-                    </p>
+                    <motion.p
+                        className="max-w-2xl mx-auto text-lg text-slate-300 mb-8 text-justify leading-relaxed"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
+                    >
+                        <TypeWriter startDelay={1000} text="Boomshakalaka I made this portfolio testing a MERN stack, mainly frontend. Watch this text type in like one of those programmer portfolios you always see." speed={50} />
+                    </motion.p>
                 </section>
 
                 {/* ABOUT */}
@@ -368,6 +348,7 @@ function App() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                             {/* CDMS — featured, large */}
+                            {/* once marami nang projects, github api to insert project*/}
                             <motion.div
                                 className="md:col-span-2 bg-[#1a1a24] border border-white/5 hover:border-green-700/30 rounded-xl p-6 flex flex-col justify-between gap-6 transition-all duration-300"
                                 initial={{ opacity: 0, y: 20 }}
@@ -789,7 +770,7 @@ function App() {
                                 maxLength={50}
                                 className="bg-transparent border-white/10 text-slate-200 placeholder:text-slate-600 mb-4"
                             />
-                                <span className="text-slate-500 text-xs">Rate what you witnessed</span>
+                            <span className="text-slate-500 text-xs">Rate what you witnessed</span>
 
                             <div className="flex items-center gap-1 mb-4">
 
