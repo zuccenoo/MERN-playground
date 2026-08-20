@@ -116,9 +116,8 @@ function App() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col text-slate-200 relative" style={{ scrollBehavior: 'smooth' }}>
-            <div className="fixed inset-0 z-0 bg-gradient-to-br from-[#0a0b0f] via-[#0f2018] to-[#020302]" />
-            <div className="fixed inset-0 z-0">
+        <div className="relative isolate min-h-dvh overflow-x-clip bg-gradient-to-br from-[#0a0b0f] via-[#0f2018] to-[#020302] text-slate-200" style={{ scrollBehavior: 'smooth' }}>
+            <div className="pointer-events-none fixed inset-0 z-0">
                 <InteractiveParticles />
             </div>
 
@@ -234,7 +233,7 @@ function App() {
             <main className="flex-grow relative z-10">
                 {/* HERO */}
                 <section id="home"
-                    className="relative text-center px-6 py-24 overflow-hidden h-screen flex flex-col items-center justify-center ">
+                    className="relative text-center px-6 py-24 overflow-hidden min-h-[100svh] flex flex-col items-center justify-center ">
 
                     <motion.div
                         className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-6 text-center md:text-left"
@@ -272,7 +271,7 @@ function App() {
                     initial={{ opacity: 0, x: -100 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, ease: "easeOut" }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: false, amount: 0.1 }}
                 >
                     <div className="absolute inset-0 h-full w-full">
                         <Particles />
